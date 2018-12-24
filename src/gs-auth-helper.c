@@ -78,13 +78,14 @@ gs_auth_get_verbose (void)
 
 static gboolean
 ext_run (const char *user,
-         const char *typed_passwd,
-         gboolean    verbose)
+		 GSAuthMessageFunc func,
+		 gpointer   data)
 {
-	int   pfd[2], status;
+	int   pfd[2], r_pdf[2], status;
 	pid_t pid;
+	gboolean verbose = gs_auth_get_verbose ();
 
-	if (pipe (pfd) < 0)
+	if (pipe (pfd) < 0 || pipe (r_pfd) < 0)
 	{
 		return 0;
 	}
@@ -99,17 +100,22 @@ ext_run (const char *user,
 
 	if ((pid = fork ()) < 0)
 	{
-		close (pfd [0]);
-		close (pfd [1]);
+		close (pfd [0]); close (pfd [1]);
+		close (r_pfd [0]); close (r_pfd [1]);
 		return FALSE;
 	}
 
 	if (pid == 0)
 	{
 		close (pfd [1]);
+		close (r_pfd [0]);
 		if (pfd [0] != 0)
 		{
 			dup2 (pfd [0], 0);
+		}
+		if (r_pfd [1] != 1)
+		{
+			dup2 (r_pfd [1], 1);
 		}
 
 		/* Helper is invoked as helper service-name [user] */
@@ -123,7 +129,58 @@ ext_run (const char *user,
 	}
 
 	close (pfd [0]);
+	close (r_pdf [1]);
 
+	int ret = 0;
+	while (waitpid (pid, &status, WNOHANG) == 0)
+	{
+		ssize_t rd;
+		int msg_type;
+		unsigned int msg_len;
+
+		rd = read (r_pfd [0], msg_type, sizeof msg_type);
+		if (rd > 0 && rd != sizeof msg_type)
+		{
+			g_message ("Error reading message type");
+			ret = 1;
+			goto exit;
+		}
+
+		rd = read (r_pfd [0], msg_len, sizeof msg_len);
+		if (rd > 0 && rd != sizeof msg_len)
+		{
+			g_message ("Error reading message length");
+			ret = 1;
+			goto exit;
+		}
+
+		if (msg_len >= MAXLEN)
+		{
+			g_message ("Message too long");
+			ret = 1;
+			goto exit;
+		}
+
+		char buf[MAXLEN];
+		ssize_t t_rd = 0;
+		while (t_rd < msg_len)
+		{
+			rd = read (r_pfd [0], buf, msg_len);
+			if (rd < 0)
+			{
+				g_message ("Error reading message");
+				ret = 1;
+				goto exit;
+			}
+			t_rd += rd;
+		}
+
+		buf[msg_len] = '\0';
+
+		char *input = NULL;
+		func (msg_type, buf, &input, data);
+	}
+		   
 	/* Write out password to helper process */
 	if (!typed_passwd)
 	{
@@ -166,28 +223,7 @@ gs_auth_verify_user (const char       *username,
                      gpointer          data,
                      GError          **error)
 {
-	gboolean       res = FALSE;
-	char          *password;
-
-	password = NULL;
-
-	/* ask for the password for user */
-	if (func != NULL)
-	{
-		func (GS_AUTH_MESSAGE_PROMPT_ECHO_OFF,
-		      "Password: ",
-		      &password,
-		      data);
-	}
-
-	if (password == NULL)
-	{
-		return FALSE;
-	}
-
-	res = ext_run (username, password, gs_auth_get_verbose ());
-
-	return res;
+	return ext_run (username, func, data);
 }
 
 gboolean
