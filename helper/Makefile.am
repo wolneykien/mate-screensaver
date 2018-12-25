@@ -21,3 +21,6 @@ mate_screensaver_pam_helper_SOURCES =	\
 
 mate_screensaver_pam_helper_LDADD =	\
 	libhelper-proto.a
+
+mate_screensaver_pam_helper_LDFLAGS =	\
+	$(AUTH_LIBS)
