@@ -17,7 +17,7 @@ mate_screensaver_pam_helper_CFLAGS =	\
 	$(MATE_SCREENSAVER_CFLAGS)
 
 mate_screensaver_pam_helper_SOURCES =	\
-	mate-pam_helper.c
+	pam-helper.c
 
 mate_screensaver_pam_helper_LDADD =	\
 	libhelper-proto.a
