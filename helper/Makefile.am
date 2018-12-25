@@ -7,8 +7,8 @@ libhelper_proto_a_CFLAGS =	\
 	$(MATE_SCREENSAVER_CFLAGS)
 
 libhelper_proto_a_SOURCES =	\
-	helper-proto.h			\
-	helper-proto.c
+	helper_proto.h			\
+	helper_proto.c
 
 pkglibexecdir = $(libexecdir)/mate-screensaver
 pkglibexec_PROGRAMS = mate-screensaver-pam-helper

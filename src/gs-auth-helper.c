@@ -142,6 +142,7 @@ ext_run (const char *user,
 		unsigned int msg_len = MAXLEN;
 
 		msg_type = read_prompt (r_pfd [0], buf, &msg_len);
+		if (0 == msg_type) continue;
 		if (msg_type < 0)
 		{
 			g_message ("Error reading prompt (%d)", msg_type);

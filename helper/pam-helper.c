@@ -27,7 +27,9 @@
 #include <fcntl.h>
 #include <ctype.h>
 
-#include "helper-proto.h"
+#include "helper_proto.h"
+#include "../src/gs-auth-pam.h"
+
 #define MAXLEN 1024
 
 enum {
@@ -100,27 +102,29 @@ _converse(int num_msg, const struct pam_message **msg,
 	for (num = 0; num < num_msg; num++) {
 		ssize_t wt, rd;
 		size_t msg_len = strlen(msg[num]->msg);
-		wt = write_prompt (STDOUT_FILENO, msg[num]->msg_style,
+		wt = write_prompt (STDOUT_FILENO,
+						   pam_style_to_gs_style (msg[num]->msg_style),
 						   msg[num]->msg, msg_len);
 		if (wt < 0 || wt != msg_len) {
-			_log_err(LOG_ERROR, "error writing promt");
+			_log_err(LOG_ERR, "error writing promt");
 			ret = PAM_CONV_ERR;
 			break;
 		}
 
 		rd = read_msg (STDIN_FILENO, buf, sizeof (buf));
 		if (rd < 0) {
-			_log_err(LOG_ERROR, "error reading reply");
+			_log_err(LOG_ERR, "error reading reply");
 			ret = PAM_CONV_ERR;
 			break;
 		}
 
-		reply[num].resp = malloc (rd);
+		reply[num].resp = malloc (rd + 1);
 		if (!reply[num].resp)
 			ret = PAM_BUF_ERR;
 		else {
 			reply[num].resp_retcode = 0;
 			memcpy (reply[num].resp, buf, rd);
+			reply[num].resp[rd] = '\0';
 		}
 	}
 
