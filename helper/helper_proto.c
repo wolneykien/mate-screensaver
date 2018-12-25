@@ -110,7 +110,7 @@ write_all (int fd, const void *buf, size_t count)
 }
 
 ssize_t
-write_msg (int fd, void *buf, size_t length)
+write_msg (int fd, const void *buf, size_t length)
 {
 	ssize_t wt;
 		
@@ -133,7 +133,7 @@ write_msg (int fd, void *buf, size_t length)
 }
 
 int
-write_prompt (int fd, int msg_type, void *buf, size_t length)
+write_prompt (int fd, int msg_type, const void *buf, size_t length)
 {
 	ssize_t wt;
 

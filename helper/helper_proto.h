@@ -39,7 +39,7 @@ int read_prompt (int fd, void *buf, size_t *length);
 #define HELPER_MSG_WRITE_ERR	-7
 #define HELPER_TYPE_WRITE_ERR	-8
 
-ssize_t write_msg (int fd, void *buf, size_t length);
-int write_prompt (int fd, int msg_type, void *buf, size_t length);
+ssize_t write_msg (int fd, const void *buf, size_t length);
+int write_prompt (int fd, int msg_type, const void *buf, size_t length);
 
 #endif /* __HELPER_PROTO_H */
