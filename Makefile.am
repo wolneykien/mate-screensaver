@@ -8,7 +8,12 @@ NULL =
 DISTCHECK_CONFIGURE_FLAGS = \
 	--without-systemd
 
-SUBDIRS =			\
+SUBDIRS =
+if HAVE_PASSWD_HELPER
+SUBDIRS += helper
+endif
+
+SUBDIRS +=	\
 	src			\
 	savers			\
 	po 			\
