@@ -32,8 +32,8 @@
 #define HELPER_MSG_READ_ERR		-4
 #define HELPER_TYPE_READ_ERR	-5
 
-ssize_t read_msg (int fd, void *buf, size_t length);
-int read_prompt (int fd, void *buf, size_t *length);
+ssize_t read_msg (int fd, char *buf, size_t length);
+int read_prompt (int fd, char *buf, size_t *length);
 
 #define HELPER_LENGTH_WRITE_ERR	-6
 #define HELPER_MSG_WRITE_ERR	-7

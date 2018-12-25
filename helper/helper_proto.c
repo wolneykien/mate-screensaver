@@ -44,12 +44,12 @@ read_all (int fd, void *buf, size_t count)
 }
 
 ssize_t
-read_msg (int fd, void *buf, size_t length)
+read_msg (int fd, char *buf, size_t length)
 {
 	size_t msg_len;
 	ssize_t rd;
 
-	rd = read_all (fd, msg_len, sizeof msg_len);
+	rd = read_all (fd, &msg_len, sizeof msg_len);
 	if (rd < 0)
 		return HELPER_IO_ERR;
 	if (rd > 0 && rd != sizeof msg_len)
@@ -66,17 +66,19 @@ read_msg (int fd, void *buf, size_t length)
 		if (rd != msg_len)
 			return HELPER_MSG_READ_ERR;
 	}
-	buf[msg_len] = '\0';
+	else
+		rd = 0;
+	buf[rd] = '\0';
 
 	return rd;
 }
 
 int
-read_prompt (int fd, void *buf, size_t *length)
+read_prompt (int fd, char *buf, size_t *length)
 {
-	int msg_type;
+	int msg_type, rd;
 
-	rd = read_all (fd, msg_type, sizeof msg_type);
+	rd = read_all (fd, &msg_type, sizeof msg_type);
 	if (rd < 0)
 		return HELPER_IO_ERR;
 	if (rd > 0 && rd != sizeof msg_type)
@@ -114,7 +116,7 @@ write_msg (int fd, const void *buf, size_t length)
 {
 	ssize_t wt;
 		
-	wt = write_all (fd, length, sizeof length);
+	wt = write_all (fd, &length, sizeof length);
 	if (wt < 0)
 		return HELPER_IO_ERR;
 	if (wt > 0 && wt != sizeof length)
@@ -128,6 +130,8 @@ write_msg (int fd, const void *buf, size_t length)
 		if (wt != length)
 			return HELPER_MSG_WRITE_ERR;
 	}
+	else
+		wt = 0;
 
 	return wt;
 }
@@ -137,10 +141,10 @@ write_prompt (int fd, int msg_type, const void *buf, size_t length)
 {
 	ssize_t wt;
 
-	wt = write_all (fd, msg_type, sizeof msg_type);
-	if (rd < 0)
+	wt = write_all (fd, &msg_type, sizeof msg_type);
+	if (wt < 0)
 		return HELPER_IO_ERR;
-	if (rd > 0 && rd != sizeof msg_type)
+	if (wt > 0 && wt != sizeof msg_type)
 		return HELPER_TYPE_WRITE_ERR;
 
 	wt = write_msg (fd, buf, length);
