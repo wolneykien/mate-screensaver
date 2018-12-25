@@ -161,6 +161,11 @@ mate_screensaver_dialog_LDADD =	\
 	$(LIBNOTIFY_LIBS)		\
 	$(NULL)
 
+if HAVE_PASSWD_HELPER
+mate_screensaver_dialog_LDADD +=	\
+	../helper/helper-proto.a
+endif
+
 BUILT_SOURCES = 		\
 	gs-marshal.c 		\
 	gs-marshal.h		\

@@ -10,7 +10,12 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-compile-warnings=no \
 	CFLAGS='-Wno-deprecated-declarations'
 
-SUBDIRS =			\
+SUBDIRS =
+if HAVE_PASSWD_HELPER
+SUBDIRS += helper
+endif
+
+SUBDIRS +=	\
 	po 			\
 	src			\
 	savers			\
