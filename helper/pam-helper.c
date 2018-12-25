@@ -27,7 +27,7 @@
 #include <fcntl.h>
 #include <ctype.h>
 
-#include "helper-proto.h"
+#include "helper_proto.h"
 #define MAXLEN 1024
 
 enum {
