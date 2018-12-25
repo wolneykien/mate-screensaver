@@ -50,6 +50,8 @@
 #include "gs-auth.h"
 #include "subprocs.h"
 
+#include "../helper/helper_proto.h"
+
 static gboolean verbose_enabled = FALSE;
 
 GQuark
@@ -81,13 +83,13 @@ ext_run (const char *user,
 		 GSAuthMessageFunc func,
 		 gpointer   data)
 {
-	int   pfd[2], r_pdf[2], status;
+	int   pfd[2], r_pfd[2], status;
 	pid_t pid;
 	gboolean verbose = gs_auth_get_verbose ();
 
 	if (pipe (pfd) < 0 || pipe (r_pfd) < 0)
 	{
-		return 0;
+		return FALSE;
 	}
 
 	if (verbose)
@@ -129,91 +131,51 @@ ext_run (const char *user,
 	}
 
 	close (pfd [0]);
-	close (r_pdf [1]);
+	close (r_pfd [1]);
 
-	int ret = 0;
+	gboolean ret = FALSE;
 	while (waitpid (pid, &status, WNOHANG) == 0)
 	{
-		ssize_t rd;
 		int msg_type;
-		unsigned int msg_len;
-
-		rd = read (r_pfd [0], msg_type, sizeof msg_type);
-		if (rd > 0 && rd != sizeof msg_type)
-		{
-			g_message ("Error reading message type");
-			ret = 1;
-			goto exit;
-		}
-
-		rd = read (r_pfd [0], msg_len, sizeof msg_len);
-		if (rd > 0 && rd != sizeof msg_len)
-		{
-			g_message ("Error reading message length");
-			ret = 1;
-			goto exit;
-		}
-
-		if (msg_len >= MAXLEN)
-		{
-			g_message ("Message too long");
-			ret = 1;
-			goto exit;
-		}
-
 		char buf[MAXLEN];
-		ssize_t t_rd = 0;
-		while (t_rd < msg_len)
-		{
-			rd = read (r_pfd [0], buf, msg_len);
-			if (rd < 0)
-			{
-				g_message ("Error reading message");
-				ret = 1;
-				goto exit;
-			}
-			t_rd += rd;
-		}
+		unsigned int msg_len = MAXLEN;
 
-		buf[msg_len] = '\0';
+		msg_type = read_prompt (r_pfd [0], buf, *msg_len);
+		if (msg_type < 0)
+		{
+			g_message ("Error reading prompt (%d)", msg_type);
+			ret = FALSE;
+			goto exit;
+		}
 
 		char *input = NULL;
 		func (msg_type, buf, &input, data);
+
+		unsigned int input_len = input ? strlen (input) : 0;
+		ssize_t wt;
+		
+		wt = write_msg (pfd [1], input, input_len);
+		if (wt < 0)
+		{
+			g_message ("Error writing prompt reply (%d)", wt);
+			ret = FALSE;
+			goto exit;
+		}
 	}
-		   
-	/* Write out password to helper process */
-	if (!typed_passwd)
-	{
-		typed_passwd = "";
-	}
-	write (pfd [1], typed_passwd, strlen (typed_passwd));
+		
 	close (pfd [1]);
-
-	while (waitpid (pid, &status, 0) < 0)
-	{
-		if (errno == EINTR)
-		{
-			continue;
-		}
-
-		if (verbose)
-		{
-			g_message ("ext_run: waitpid failed: %s\n",
-			           g_strerror (errno));
-		}
-
-		unblock_sigchld ();
-		return FALSE;
-	}
-
+	close (r_pfd [0]);
 	unblock_sigchld ();
 
 	if (! WIFEXITED (status) || WEXITSTATUS (status) != 0)
 	{
-		return FALSE;
+		ret = FALSE;
 	}
+	else
+		ret = TRUE;
 
-	return TRUE;
+  exit:
+	return ret;
 }
 
 gboolean
