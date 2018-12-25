@@ -27,14 +27,15 @@
 #include <fcntl.h>
 #include <ctype.h>
 
+#include "helper-proto.h"
+#define MAXLEN 1024
+
 enum {
 	UNIX_PASSED = 0,
 	UNIX_FAILED = 1
 };
 
 static char *	program_name;
-static char	pass[64];
-static int	npass = -1;
 
 /*
  * Log error messages
@@ -89,41 +90,47 @@ _converse(int num_msg, const struct pam_message **msg,
 		struct pam_response **resp, void *appdata_ptr)
 {
 	struct	pam_response *reply;
+	char buf[MAXLEN];
 	int	num;
+	int ret = PAM_SUCCESS;
 
 	if (!(reply = malloc(sizeof(*reply) * num_msg)))
 		return PAM_CONV_ERR;
 
 	for (num = 0; num < num_msg; num++) {
-		reply[num].resp_retcode = PAM_SUCCESS;
-		reply[num].resp = NULL;
-		switch (msg[num]->msg_style) {
-		case PAM_PROMPT_ECHO_ON:
-			return PAM_CONV_ERR;
-		case PAM_PROMPT_ECHO_OFF:
-			/* read the password from stdin */
-			if (npass < 0) {
-				npass = read(STDIN_FILENO, pass, sizeof(pass)-1);
-				if (npass < 0) {
-					_log_err(LOG_DEBUG, "error reading password");
-					return UNIX_FAILED;
-				}
-				pass[npass] = '\0';
-			}
-			reply[num].resp = strdup(pass);
+		ssize_t wt, rd;
+		size_t msg_len = strlen(msg[num]->msg);
+		wt = write_prompt (STDOUT_FILENO, msg[num]->msg_style,
+						   msg[num]->msg, msg_len);
+		if (wt < 0 || wt != msg_len) {
+			_log_err(LOG_ERROR, "error writing promt");
+			ret = PAM_CONV_ERR;
 			break;
-		case PAM_TEXT_INFO:
-		case PAM_ERROR_MSG:
-			/* ignored */
+		}
+
+		rd = read_msg (STDIN_FILENO, buf, sizeof (buf));
+		if (rd < 0) {
+			_log_err(LOG_ERROR, "error reading reply");
+			ret = PAM_CONV_ERR;
 			break;
-		default:
-			/* Must be an error of some sort... */
-			return PAM_CONV_ERR;
+		}
+
+		reply[num].resp = malloc (rd);
+		if (!reply[num].resp)
+			ret = PAM_BUF_ERR;
+		else {
+			reply[num].resp_retcode = 0;
+			memcpy (reply[num].resp, buf, rd);
 		}
 	}
 
-	*resp = reply;
-	return PAM_SUCCESS;
+	if (ret != PAM_SUCCESS) {
+		for (num = 0; num < num_msg; num++)
+			free (reply[num].resp);
+	} else
+		*resp = reply;
+
+	return ret;
 }
 
 static int
