@@ -66,6 +66,9 @@ install -m644 -pD doc/mate-screensaver.html %buildroot%_datadir/doc/mate-screens
 %_sysconfdir/xdg/autostart/%name.desktop
 %_bindir/mate-screensaver*
 %_libexecdir/%name-*
+%_libexecdir/%name/floaters
+%_libexecdir/%name/popsquares
+%_libexecdir/%name/slideshow
 %attr(2511,root,chkpwd) %_libexecdir/%name/%name-pam-helper
 %_desktopdir/%name-preferences.desktop
 %_desktopdir/screensavers/*.desktop
