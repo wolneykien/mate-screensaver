@@ -51,6 +51,7 @@
 #include "subprocs.h"
 
 #include "../helper/helper_proto.h"
+#define MAXLEN 1024
 
 static gboolean verbose_enabled = FALSE;
 
@@ -140,7 +141,7 @@ ext_run (const char *user,
 		char buf[MAXLEN];
 		unsigned int msg_len = MAXLEN;
 
-		msg_type = read_prompt (r_pfd [0], buf, *msg_len);
+		msg_type = read_prompt (r_pfd [0], buf, &msg_len);
 		if (msg_type < 0)
 		{
 			g_message ("Error reading prompt (%d)", msg_type);
