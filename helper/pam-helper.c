@@ -103,14 +103,14 @@ _converse(int num_msg, const struct pam_message **msg,
 		wt = write_prompt (STDOUT_FILENO, msg[num]->msg_style,
 						   msg[num]->msg, msg_len);
 		if (wt < 0 || wt != msg_len) {
-			_log_err(LOG_ERROR, "error writing promt");
+			_log_err(LOG_ERR, "error writing promt");
 			ret = PAM_CONV_ERR;
 			break;
 		}
 
 		rd = read_msg (STDIN_FILENO, buf, sizeof (buf));
 		if (rd < 0) {
-			_log_err(LOG_ERROR, "error reading reply");
+			_log_err(LOG_ERR, "error reading reply");
 			ret = PAM_CONV_ERR;
 			break;
 		}
