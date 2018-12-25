@@ -97,6 +97,11 @@ test_passwd_LDADD =			\
 	$(AUTH_LIBS)			\
 	$(NULL)
 
+if HAVE_PASSWD_HELPER
+test_passwd_LDADD +=	\
+	../helper/libhelper-proto.a
+endif
+
 test_watcher_SOURCES =			\
 	test-watcher.c			\
 	gs-watcher.h			\
