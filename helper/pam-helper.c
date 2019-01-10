@@ -28,6 +28,8 @@
 #include <ctype.h>
 
 #include "helper_proto.h"
+#include "../src/gs-auth-pam.h"
+
 #define MAXLEN 1024
 
 enum {
@@ -100,7 +102,8 @@ _converse(int num_msg, const struct pam_message **msg,
 	for (num = 0; num < num_msg; num++) {
 		ssize_t wt, rd;
 		size_t msg_len = strlen(msg[num]->msg);
-		wt = write_prompt (STDOUT_FILENO, msg[num]->msg_style,
+		wt = write_prompt (STDOUT_FILENO,
+						   pam_style_to_gs_style (msg[num]->msg_style),
 						   msg[num]->msg, msg_len);
 		if (wt < 0 || wt != msg_len) {
 			_log_err(LOG_ERR, "error writing promt");
