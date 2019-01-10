@@ -35,6 +35,8 @@ read_all (int fd, void *buf, size_t count)
 	while (t_rd < count)
 	{
 		rd = read (fd, buf + t_rd, count - t_rd);
+		if (0 == rd)
+			break;
 		if (rd < 0)
 			return rd;
 		t_rd += rd;
@@ -79,6 +81,8 @@ read_prompt (int fd, char *buf, size_t *length)
 	int msg_type, rd;
 
 	rd = read_all (fd, &msg_type, sizeof msg_type);
+	if (0 == rd)
+		return 0;
 	if (rd < 0)
 		return HELPER_IO_ERR;
 	if (rd > 0 && rd != sizeof msg_type)
@@ -103,6 +107,8 @@ write_all (int fd, const void *buf, size_t count)
 	while (t_wt < count)
 	{
 		wt = write (fd, buf + t_wt, count - t_wt);
+		if (0 == wt)
+			break;
 		if (wt < 0)
 			return wt;
 		t_wt += wt;
