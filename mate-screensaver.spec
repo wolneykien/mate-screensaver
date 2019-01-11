@@ -2,7 +2,7 @@
 
 Name: mate-screensaver
 Version: 1.20.3
-Release: alt1
+Release: alt2
 Epoch: 2
 Summary: MATE Screensaver
 License: GPLv2+ and LGPLv2+
@@ -86,6 +86,10 @@ install -m644 -pD doc/mate-screensaver.html %buildroot%_datadir/doc/mate-screens
 %_libdir/pkgconfig/*.pc
 
 %changelog
+* Fri Jan 11 2019 Paul Wolneykien <manowar@altlinux.org> 2:1.20.3-alt2
+- Added helper protocol library.
+- Improved PAM helper (supports PAM conversation).
+
 * Mon Dec 24 2018 Valery Inozemtsev <shrek@altlinux.ru> 2:1.20.3-alt1
 - 1.20.3
 
