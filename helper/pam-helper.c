@@ -118,12 +118,13 @@ _converse(int num_msg, const struct pam_message **msg,
 			break;
 		}
 
-		reply[num].resp = malloc (rd);
+		reply[num].resp = malloc (rd + 1);
 		if (!reply[num].resp)
 			ret = PAM_BUF_ERR;
 		else {
 			reply[num].resp_retcode = 0;
 			memcpy (reply[num].resp, buf, rd);
+			reply[num].resp[rd] = '\0';
 		}
 	}
 
