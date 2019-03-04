@@ -1136,6 +1136,7 @@ data/images/cosmos/Makefile
 savers/Makefile
 doc/Makefile
 doc/mate-screensaver.xml
+helper/Makefile
 ])
 
 echo "
