@@ -97,6 +97,11 @@ test_passwd_LDADD =			\
 	$(AUTH_LIBS)			\
 	$(NULL)
 
+if HAVE_PASSWD_HELPER
+test_passwd_LDADD +=	\
+	../helper/libhelper-proto.a
+endif
+
 test_watcher_SOURCES =			\
 	test-watcher.c			\
 	gs-watcher.h			\
@@ -158,6 +163,11 @@ mate_screensaver_dialog_LDADD =	\
 	$(LIBMATEKBDUI_LIBS)		\
 	$(LIBNOTIFY_LIBS)		\
 	$(NULL)
+
+if HAVE_PASSWD_HELPER
+mate_screensaver_dialog_LDADD +=	\
+	../helper/libhelper-proto.a
+endif
 
 BUILT_SOURCES = 		\
 	gs-marshal.c 		\
