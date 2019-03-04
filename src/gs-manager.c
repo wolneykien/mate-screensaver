@@ -1174,7 +1174,7 @@ manager_maybe_grab_window (GSManager *manager,
 	gdk_device_get_position (device, NULL, &x, &y);
 	monitor = gdk_display_get_monitor_at_point (display, x, y);
 
-	gdk_flush ();
+	gdk_display_flush (display);
 	grabbed = FALSE;
 	if (gs_window_get_display (window) == display &&
 	    gs_window_get_monitor (window) == monitor)
@@ -1527,16 +1527,14 @@ gs_manager_create_window_for_monitor (GSManager  *manager,
                                       GdkMonitor *monitor)
 {
 	GSWindow    *window;
-	GdkDisplay  *display;
 	GdkRectangle rect;
 
-	display = gdk_monitor_get_display (monitor);
 	gdk_monitor_get_geometry (monitor, &rect);
 
 	gs_debug ("Creating a window [%d,%d] (%dx%d)",
 	          rect.x, rect.y, rect.width, rect.height);
 
-	window = gs_window_new (display, monitor, manager->priv->lock_active);
+	window = gs_window_new (monitor, manager->priv->lock_active);
 
 	gs_window_set_user_switch_enabled (window, manager->priv->user_switch_enabled);
 	gs_window_set_logout_enabled (window, manager->priv->logout_enabled);

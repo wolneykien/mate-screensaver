@@ -2,7 +2,7 @@ dnl -*- mode: m4 -*-
 
 AC_PREREQ(2.60)
 AC_INIT([mate-screensaver],
-        [1.20.3],
+        [1.22.0],
         [http://www.mate-desktop.org/])
 
 AC_CONFIG_SRCDIR(src/mate-screensaver.c)
@@ -47,7 +47,7 @@ DBUS_REQUIRED_VERSION=0.30
 GLIB_REQUIRED_VERSION=2.50.0
 GTK_REQUIRED_VERSION=3.22.0
 X11_REQUIRED_VERSION=1.0
-LIBMATE_MENU_REQUIRED_VERSION=1.10.0
+LIBMATE_MENU_REQUIRED_VERSION=1.21.0
 MATE_DESKTOP_REQUIRED_VERSION=1.17.0
 LIBMATEKBDUI_REQUIRED_VERSION=1.17.0
 
@@ -1136,7 +1136,6 @@ data/images/cosmos/Makefile
 savers/Makefile
 doc/Makefile
 doc/mate-screensaver.xml
-helper/Makefile
 ])
 
 echo "

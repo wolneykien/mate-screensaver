@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MATE Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-17 15:12+0100\n"
-"PO-Revision-Date: 2018-03-11 21:01+0000\n"
+"POT-Creation-Date: 2019-02-10 14:27+0100\n"
+"PO-Revision-Date: 2018-03-11 21:02+0000\n"
 "Last-Translator: Ikuru K <kanumaiku@gmail.com>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/mate/teams/13566/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgstr "ログアウト(_L)"
 msgid "_Cancel"
 msgstr "キャンセル(_C)"
 
-#: ../data/lock-dialog-default.ui.h:5 ../src/gs-lock-plug.c:1672
+#: ../data/lock-dialog-default.ui.h:5 ../src/gs-lock-plug.c:1680
 msgid "_Unlock"
 msgstr "ロックの解除(_U)"
 
@@ -315,7 +315,7 @@ msgstr "ポップな矩形のアート"
 msgid "A pop-art-ish grid of pulsing colors."
 msgstr "四角形が脈打つように見えるポップアートを表示します"
 
-#: ../savers/popsquares.c:49 ../savers/floaters.c:1188
+#: ../savers/popsquares.c:49 ../savers/floaters.c:1191
 #, c-format
 msgid "%s. See --help for usage information.\n"
 msgstr "%s (用法については --help オプションで確認して下さい)\n"
@@ -354,11 +354,11 @@ msgstr "使用する元の画像"
 
 #. translators: the word "image" here
 #. * represents a command line argument
-#: ../savers/floaters.c:1182
+#: ../savers/floaters.c:1185
 msgid "image - floats images around the screen"
 msgstr "画像 - スクリーンの回りに画像を浮かす"
 
-#: ../savers/floaters.c:1197
+#: ../savers/floaters.c:1200
 #, c-format
 msgid "You must specify one image.  See --help for usage information.\n"
 msgstr "少なくとも画像を一つ指定して下さい (用法については --help オプションで確認して下さい)\n"
@@ -417,86 +417,90 @@ msgstr "%s はスクリーンセーバーとして妥当なテーマではない
 msgid "Copying file: %u of %u"
 msgstr "ファイルのコピー中: %u / %u"
 
-#: ../src/mate-screensaver-command.c:59
+#: ../src/mate-screensaver-command.c:60
 msgid "Causes the screensaver to exit gracefully"
 msgstr "スクリーンセーバーを強制終了する"
 
-#: ../src/mate-screensaver-command.c:63
+#: ../src/mate-screensaver-command.c:64
 msgid "Query the state of the screensaver"
 msgstr "スクリーンセーバーの状態を問い合わせる"
 
-#: ../src/mate-screensaver-command.c:67
+#: ../src/mate-screensaver-command.c:68
 msgid "Query the length of time the screensaver has been active"
 msgstr "スクリーンセーバーが起動するしている時間を問い合わせる"
 
-#: ../src/mate-screensaver-command.c:71
+#: ../src/mate-screensaver-command.c:72
 msgid "Tells the running screensaver process to lock the screen immediately"
 msgstr "起動中のスクリーンセーバーに今すぐ画面をロックさせる"
 
-#: ../src/mate-screensaver-command.c:75
+#: ../src/mate-screensaver-command.c:76
+msgid "Tells the running screensaver process to unlock the screen immediately"
+msgstr ""
+
+#: ../src/mate-screensaver-command.c:80
 msgid "If the screensaver is active then switch to another graphics demo"
 msgstr "スクリーンセーバーが起動されていたら別のグラフィックスデモに切り替える"
 
-#: ../src/mate-screensaver-command.c:79
+#: ../src/mate-screensaver-command.c:84
 msgid "Turn the screensaver on (blank the screen)"
 msgstr "スクリーンセーバーを有効にする (ブランクスクリーン)"
 
-#: ../src/mate-screensaver-command.c:83
+#: ../src/mate-screensaver-command.c:88
 msgid "If the screensaver is active then deactivate it (un-blank the screen)"
 msgstr "有効になっているスクリーンセーバーを無効にする (ブランクスクリーン解除)"
 
-#: ../src/mate-screensaver-command.c:87
+#: ../src/mate-screensaver-command.c:92
 msgid "Poke the running screensaver to simulate user activity"
 msgstr "ユーザが設定できる機能を模擬するためにスクリーンセーバーをランダムに実行する"
 
-#: ../src/mate-screensaver-command.c:91
+#: ../src/mate-screensaver-command.c:96
 msgid ""
 "Inhibit the screensaver from activating.  Command blocks while inhibit is "
 "active."
 msgstr "スクリーンセーバーの起動を抑制する (これが有効な場合はコマンドが無視される)"
 
-#: ../src/mate-screensaver-command.c:95
+#: ../src/mate-screensaver-command.c:100
 msgid "The calling application that is inhibiting the screensaver"
 msgstr "スクリーンセーバーを抑止するアプリケーションを呼び出す"
 
-#: ../src/mate-screensaver-command.c:99
+#: ../src/mate-screensaver-command.c:104
 msgid "The reason for inhibiting the screensaver"
 msgstr "スクリーンセーバーを抑止するための理由を指定する"
 
-#: ../src/mate-screensaver-command.c:103 ../src/mate-screensaver-dialog.c:58
+#: ../src/mate-screensaver-command.c:108 ../src/mate-screensaver-dialog.c:58
 #: ../src/mate-screensaver.c:55
 msgid "Version of this application"
 msgstr "このアプリケーションのバージョンを表示する"
 
-#: ../src/mate-screensaver-command.c:352
+#: ../src/mate-screensaver-command.c:357
 #, c-format
 msgid "The screensaver is %s\n"
 msgstr "スクリーンセーバーは%s\n"
 
-#: ../src/mate-screensaver-command.c:352
+#: ../src/mate-screensaver-command.c:357
 msgid "active"
 msgstr "起動されています"
 
-#: ../src/mate-screensaver-command.c:352
+#: ../src/mate-screensaver-command.c:357
 msgid "inactive"
 msgstr "起動されていません"
 
-#: ../src/mate-screensaver-command.c:368
+#: ../src/mate-screensaver-command.c:373
 #, c-format
 msgid "The screensaver is not inhibited\n"
 msgstr "スクリーンセーバーは無効になっていません\n"
 
-#: ../src/mate-screensaver-command.c:376
+#: ../src/mate-screensaver-command.c:381
 #, c-format
 msgid "The screensaver is being inhibited by:\n"
 msgstr "次のアプリがスクリーンセーバーを無効にしています:\n"
 
-#: ../src/mate-screensaver-command.c:411
+#: ../src/mate-screensaver-command.c:416
 #, c-format
 msgid "The screensaver has been active for %d seconds.\n"
 msgstr "スクリーンセーバーは %d 秒間起動されています\n"
 
-#: ../src/mate-screensaver-command.c:417
+#: ../src/mate-screensaver-command.c:422
 #, c-format
 msgid "The screensaver is not currently active.\n"
 msgstr "スクリーンセーバーは現在、有効になっていません。\n"
@@ -710,15 +714,15 @@ msgstr "この時点ではアクセスが拒否されています"
 msgid "No longer permitted to access the system."
 msgstr "システムへのアクセスが許可されていません"
 
-#: ../src/gs-listener-dbus.c:2180
+#: ../src/gs-listener-dbus.c:2187
 msgid "failed to register with the message bus"
 msgstr "メッセージバスへの登録に失敗しました"
 
-#: ../src/gs-listener-dbus.c:2191
+#: ../src/gs-listener-dbus.c:2198
 msgid "not connected to the message bus"
 msgstr "メッセージバスに接続していません"
 
-#: ../src/gs-listener-dbus.c:2201 ../src/gs-listener-dbus.c:2233
+#: ../src/gs-listener-dbus.c:2208 ../src/gs-listener-dbus.c:2240
 msgid "screensaver already running in this session"
 msgstr "このセッションで既にスクリーンセーバーが実行中です"
 
@@ -736,19 +740,19 @@ msgstr "タイムアウトしました"
 msgid "You have the Caps Lock key on."
 msgstr "[Caps Lock] キーが押されています"
 
-#: ../src/gs-lock-plug.c:1652
+#: ../src/gs-lock-plug.c:1660
 msgid "S_witch User..."
 msgstr "ユーザの切り替え(_W)..."
 
-#: ../src/gs-lock-plug.c:1661
+#: ../src/gs-lock-plug.c:1669
 msgid "Log _Out"
 msgstr "ログアウト(_O)"
 
 #. To translators: This expands to USERNAME on HOSTNAME
-#: ../src/gs-lock-plug.c:1874
+#: ../src/gs-lock-plug.c:1882
 msgid "%U on %h"
 msgstr "%U@%h"
 
-#: ../src/gs-lock-plug.c:1889
+#: ../src/gs-lock-plug.c:1897
 msgid "_Password:"
 msgstr "パスワード(_P):"

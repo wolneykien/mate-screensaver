@@ -232,16 +232,19 @@ static void
 widget_clear_all_children (GtkWidget *widget)
 {
 	GdkWindow *w;
+	GdkDisplay *display;
 
 	gs_debug ("Clearing all child windows");
+	display = gtk_widget_get_display (widget);
 
-	gdk_error_trap_push ();
+	gdk_x11_display_error_trap_push (display);
 
 	w = gtk_widget_get_window (widget);
 
 	clear_children (GDK_WINDOW_XID (w));
 
-	gdk_error_trap_pop_ignored ();
+	gdk_x11_display_error_trap_pop_ignored (display);
+
 }
 
 void
@@ -267,6 +270,7 @@ gs_window_set_background_surface (GSWindow        *window,
 void
 gs_window_clear (GSWindow *window)
 {
+	GdkDisplay *display;
 	g_return_if_fail (GS_IS_WINDOW (window));
 
 	gs_debug ("Clearing widgets");
@@ -285,7 +289,8 @@ gs_window_clear (GSWindow *window)
 		widget_clear_all_children (window->priv->drawing_area);
 	}
 
-	gdk_flush ();
+	display = gtk_widget_get_display (GTK_WIDGET(window));
+	gdk_display_flush (display);
 }
 
 static cairo_region_t *
@@ -361,10 +366,11 @@ update_geometry (GSWindow *window)
 }
 
 static void
-screen_size_changed (GdkScreen *screen,
-                     GSWindow  *window)
+monitor_geometry_notify (GdkMonitor *monitor,
+                         GParamSpec *pspec,
+                         GSWindow   *window)
 {
-	gs_debug ("Got screen size changed signal");
+	gs_debug ("Got monitor geometry notify signal");
 	gtk_widget_queue_resize (GTK_WIDGET (window));
 }
 
@@ -413,8 +419,9 @@ gs_window_move_resize_window (GSWindow *window,
 static void
 gs_window_real_unrealize (GtkWidget *widget)
 {
-	g_signal_handlers_disconnect_by_func (gtk_window_get_screen (GTK_WINDOW (widget)),
-	                                      screen_size_changed,
+	GdkMonitor *monitor = GS_WINDOW (widget)->priv->monitor;
+
+	g_signal_handlers_disconnect_by_func (monitor, monitor_geometry_notify,
 	                                      widget);
 
 	if (GTK_WIDGET_CLASS (gs_window_parent_class)->unrealize)
@@ -570,6 +577,8 @@ widget_set_best_visual (GtkWidget *widget)
 static void
 gs_window_real_realize (GtkWidget *widget)
 {
+	GdkMonitor *monitor = GS_WINDOW (widget)->priv->monitor;
+
 	widget_set_best_visual (widget);
 
 	if (GTK_WIDGET_CLASS (gs_window_parent_class)->realize)
@@ -581,9 +590,9 @@ gs_window_real_realize (GtkWidget *widget)
 
 	gs_window_move_resize_window (GS_WINDOW (widget), TRUE, TRUE);
 
-	g_signal_connect (gtk_window_get_screen (GTK_WINDOW (widget)),
-	                  "size_changed",
-	                  G_CALLBACK (screen_size_changed),
+	g_signal_connect (monitor,
+	                  "notify::geometry",
+	                  G_CALLBACK (monitor_geometry_notify),
 	                  widget);
 }
 
@@ -763,16 +772,19 @@ select_popup_events (void)
 {
 	XWindowAttributes attr;
 	unsigned long     events;
+	GdkDisplay *display;
 
-	gdk_error_trap_push ();
+	display = gdk_display_get_default ();
+
+	gdk_x11_display_error_trap_push (display);
 
 	memset (&attr, 0, sizeof (attr));
-	XGetWindowAttributes (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), GDK_ROOT_WINDOW (), &attr);
+	XGetWindowAttributes (GDK_DISPLAY_XDISPLAY (display), GDK_ROOT_WINDOW (), &attr);
 
 	events = SubstructureNotifyMask | attr.your_event_mask;
-	XSelectInput (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), GDK_ROOT_WINDOW (), events);
+	XSelectInput (GDK_DISPLAY_XDISPLAY (display), GDK_ROOT_WINDOW (), events);
 
-	gdk_error_trap_pop_ignored ();
+	gdk_x11_display_error_trap_pop_ignored (display);
 }
 
 static void
@@ -781,15 +793,18 @@ window_select_shape_events (GSWindow *window)
 #ifdef HAVE_SHAPE_EXT
 	unsigned long events;
 	int           shape_error_base;
+	GdkDisplay *display;
 
-	gdk_error_trap_push ();
+	display = gtk_widget_get_display (GTK_WIDGET(window));
 
-	if (XShapeQueryExtension (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), &window->priv->shape_event_base, &shape_error_base)) {
+	gdk_x11_display_error_trap_push (display);
+
+	if (XShapeQueryExtension (GDK_DISPLAY_XDISPLAY (display), &window->priv->shape_event_base, &shape_error_base)) {
 		events = ShapeNotifyMask;
-		XShapeSelectInput (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), GDK_WINDOW_XID (gtk_widget_get_window (GTK_WIDGET (window))), events);
+		XShapeSelectInput (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (gtk_widget_get_window (GTK_WIDGET (window))), events);
 	}
 
-	gdk_error_trap_pop_ignored ();
+	gdk_x11_display_error_trap_pop_ignored (display);
 #endif
 }
 
@@ -2546,12 +2561,12 @@ gs_window_finalize (GObject *object)
 }
 
 GSWindow *
-gs_window_new (GdkDisplay *display,
-               GdkMonitor *monitor,
+gs_window_new (GdkMonitor *monitor,
                gboolean   lock_enabled)
 {
-	GObject   *result;
-	GdkScreen *screen = gdk_display_get_default_screen (display);
+	GObject    *result;
+	GdkDisplay *display = gdk_monitor_get_display (monitor);
+	GdkScreen  *screen = gdk_display_get_default_screen (display);
 
 	result = g_object_new (GS_TYPE_WINDOW,
 	                       "type", GTK_WINDOW_POPUP,

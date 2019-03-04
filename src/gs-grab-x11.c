@@ -101,8 +101,11 @@ xorg_lock_smasher_set_active (GSGrab  *grab,
                               gboolean active)
 {
 	int status, event, error;
+	GdkDisplay *display;
 
-	if (!XF86MiscQueryExtension (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), &event, &error))
+	display = gdk_display_get_default ();
+
+	if (!XF86MiscQueryExtension (GDK_DISPLAY_XDISPLAY (display), &event, &error))
 	{
 		gs_debug ("No XFree86-Misc extension present");
 		return;
@@ -117,12 +120,12 @@ xorg_lock_smasher_set_active (GSGrab  *grab,
 		gs_debug ("Disabling the x.org grab smasher");
 	}
 
-	gdk_error_trap_push ();
+	gdk_x11_display_error_trap_push (display);
 
-	status = XF86MiscSetGrabKeysState (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), active);
+	status = XF86MiscSetGrabKeysState (GDK_DISPLAY_XDISPLAY (display), active);
 
-	gdk_display_sync (gdk_display_get_default ());
-	error = gdk_error_trap_pop ();
+	gdk_display_sync (display);
+	error = gdk_x11_display_error_trap_pop (display);
 
 	if (active && status == MiscExtGrabStateAlready)
 	{
@@ -259,8 +262,8 @@ gs_grab_release (GSGrab *grab, gboolean flush)
 		/* FIXME: is it right to enable this? */
 		xorg_lock_smasher_set_active (grab, TRUE);
 
-		gdk_display_sync (gdk_display_get_default ());
-		gdk_flush ();
+		gdk_display_sync (display);
+		gdk_display_flush (display);
 	}
 }
 
@@ -345,13 +348,13 @@ gs_grab_nuke_focus (GdkDisplay *display)
 
 	gs_debug ("Nuking focus");
 
-	gdk_error_trap_push ();
+	gdk_x11_display_error_trap_push (display);
 
 	XGetInputFocus (GDK_DISPLAY_XDISPLAY (display), &focus, &rev);
 	XSetInputFocus (GDK_DISPLAY_XDISPLAY (display), None,
 	                RevertToNone, CurrentTime);
 
-	gdk_error_trap_pop_ignored ();
+	gdk_x11_display_error_trap_pop_ignored (display);
 }
 
 gboolean
@@ -461,7 +464,7 @@ gs_grab_move_to_window (GSGrab     *grab,
 	{
 		result = gs_grab_move (grab, window, display,
 		                       no_pointer_grab, hide_cursor);
-		gdk_flush ();
+		gdk_display_flush (display);
 	}
 }
 

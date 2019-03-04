@@ -450,7 +450,7 @@ is_capslock_on (void)
 
 	res = FALSE;
 
-	keymap = gdk_keymap_get_default ();
+	keymap = gdk_keymap_get_for_display (gdk_display_get_default ());
 	if (keymap != NULL) {
 		res = gdk_keymap_get_caps_lock_state (keymap);
 	}
@@ -1591,7 +1591,11 @@ gs_lock_plug_add_button (GSLockPlug  *plug,
 	g_return_val_if_fail (GS_IS_LOCK_PLUG (plug), NULL);
 	g_return_val_if_fail (button_text != NULL, NULL);
 
-	button = gtk_button_new_with_label (button_text);
+	button = GTK_WIDGET (g_object_new (GTK_TYPE_BUTTON,
+	                                   "label", button_text,
+	                                   "use-stock", TRUE,
+	                                   "use-underline", TRUE,
+	                                   NULL));
 
 	gtk_widget_set_can_default (button, TRUE);
 
@@ -1668,7 +1672,7 @@ create_page_one_buttons (GSLockPlug *plug)
 
 	plug->priv->auth_cancel_button =  gs_lock_plug_add_button (GS_LOCK_PLUG (plug),
 	                                  plug->priv->auth_action_area,
-	                                  GTK_STOCK_CANCEL);
+	                                  "gtk-cancel");
 	gtk_widget_set_focus_on_click (GTK_WIDGET (plug->priv->auth_cancel_button), FALSE);
 
 	plug->priv->auth_unlock_button =  gs_lock_plug_add_button (GS_LOCK_PLUG (plug),

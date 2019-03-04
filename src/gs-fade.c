@@ -174,6 +174,7 @@ xf86_whack_gamma (int              screen,
 {
 	Bool status;
 	struct GSGammaInfo *gamma_info;
+	GdkDisplay *display;
 
 	gamma_info = screen_priv->info;
 
@@ -243,7 +244,8 @@ xf86_whack_gamma (int              screen,
 # endif /* !HAVE_XF86VMODE_GAMMA_RAMP */
 	}
 
-	gdk_flush ();
+	display = gdk_display_get_default ();
+	gdk_display_flush (display);
 
 	return status;
 }
@@ -753,7 +755,7 @@ gs_fade_start (GSFade *fade,
 	{
 		guint num_steps;
 
-		num_steps = (fade->priv->timeout / 1000) * steps_per_sec;
+		num_steps = (fade->priv->timeout / 1000.0) * steps_per_sec;
 		msecs_per_step = 1000 / steps_per_sec;
 		fade->priv->alpha_per_iter = 1.0 / (gdouble)num_steps;
 

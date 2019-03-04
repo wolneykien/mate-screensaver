@@ -7,16 +7,16 @@
 # Stefano Karapetsas <stefano@karapetsas.com>, 2018
 # zubr139, 2018
 # Denis <prohibiti@gmail.com>, 2018
-# Микола Ткач <znadibnyk@gmail.com>, 2018
+# Микола Ткач <chistomov@gmail.com>, 2018
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: MATE Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-17 15:12+0100\n"
-"PO-Revision-Date: 2018-03-11 21:01+0000\n"
-"Last-Translator: Микола Ткач <znadibnyk@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-02-10 14:27+0100\n"
+"PO-Revision-Date: 2018-03-11 21:02+0000\n"
+"Last-Translator: Микола Ткач <chistomov@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/mate/teams/13566/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,7 +108,7 @@ msgstr "_Завершити сеанс"
 msgid "_Cancel"
 msgstr "_Скасувати"
 
-#: ../data/lock-dialog-default.ui.h:5 ../src/gs-lock-plug.c:1672
+#: ../data/lock-dialog-default.ui.h:5 ../src/gs-lock-plug.c:1680
 msgid "_Unlock"
 msgstr "_Розблокувати"
 
@@ -278,7 +278,7 @@ msgid ""
 "different user account."
 msgstr ""
 "Якщо встановлено значення TRUE, діялоґ розблокування екрану надасть "
-"можливість  увійти в систему під иньшим обліковим записом."
+"можливість  увійти в систему під иншим обліковим записом."
 
 #: ../data/org.mate.screensaver.gschema.xml.in.h:27
 msgid "Theme for lock dialog"
@@ -333,7 +333,7 @@ msgstr "Пульсуючі комірки"
 msgid "A pop-art-ish grid of pulsing colors."
 msgstr "Мережа з пульсуючих кольорових комірок."
 
-#: ../savers/popsquares.c:49 ../savers/floaters.c:1188
+#: ../savers/popsquares.c:49 ../savers/floaters.c:1191
 #, c-format
 msgid "%s. See --help for usage information.\n"
 msgstr "%s. Для докладнішої інформації вкажіть --help.\n"
@@ -372,11 +372,11 @@ msgstr "Зображення, що використовується"
 
 #. translators: the word "image" here
 #. * represents a command line argument
-#: ../savers/floaters.c:1182
+#: ../savers/floaters.c:1185
 msgid "image - floats images around the screen"
 msgstr "image - зображення, що плявають по екрану"
 
-#: ../savers/floaters.c:1197
+#: ../savers/floaters.c:1200
 #, c-format
 msgid "You must specify one image.  See --help for usage information.\n"
 msgstr "Слід вказати один малюнок. Для докладнішої інформації вкажіть --help.\n"
@@ -435,40 +435,44 @@ msgstr "Файл %s не схожий на файл теми зберігача 
 msgid "Copying file: %u of %u"
 msgstr "Копіюється файл: %u of %u"
 
-#: ../src/mate-screensaver-command.c:59
+#: ../src/mate-screensaver-command.c:60
 msgid "Causes the screensaver to exit gracefully"
 msgstr "Призводить до виходу із зберігача екрану"
 
-#: ../src/mate-screensaver-command.c:63
+#: ../src/mate-screensaver-command.c:64
 msgid "Query the state of the screensaver"
 msgstr "Запитує стан зберігача екрану"
 
-#: ../src/mate-screensaver-command.c:67
+#: ../src/mate-screensaver-command.c:68
 msgid "Query the length of time the screensaver has been active"
 msgstr "Запитати інтервал часу, протягом якого був активним зберігач екрану"
 
-#: ../src/mate-screensaver-command.c:71
+#: ../src/mate-screensaver-command.c:72
 msgid "Tells the running screensaver process to lock the screen immediately"
 msgstr "Вказує запущеному процесу зберігача екрану негайно заблокувати екран"
 
-#: ../src/mate-screensaver-command.c:75
+#: ../src/mate-screensaver-command.c:76
+msgid "Tells the running screensaver process to unlock the screen immediately"
+msgstr ""
+
+#: ../src/mate-screensaver-command.c:80
 msgid "If the screensaver is active then switch to another graphics demo"
 msgstr "Якщо зберігач екрану активний, змінити заставку"
 
-#: ../src/mate-screensaver-command.c:79
+#: ../src/mate-screensaver-command.c:84
 msgid "Turn the screensaver on (blank the screen)"
 msgstr "Увімкнути зберігач екрану (погасити екран)"
 
-#: ../src/mate-screensaver-command.c:83
+#: ../src/mate-screensaver-command.c:88
 msgid "If the screensaver is active then deactivate it (un-blank the screen)"
 msgstr "Якщо зберігач екрану активний, деактивувати його (відновити екран)"
 
-#: ../src/mate-screensaver-command.c:87
+#: ../src/mate-screensaver-command.c:92
 msgid "Poke the running screensaver to simulate user activity"
 msgstr ""
 "Штовхнути запущений зберігач екрану для імітації активности користувача"
 
-#: ../src/mate-screensaver-command.c:91
+#: ../src/mate-screensaver-command.c:96
 msgid ""
 "Inhibit the screensaver from activating.  Command blocks while inhibit is "
 "active."
@@ -476,48 +480,48 @@ msgstr ""
 "Затримувати активацію зберігача екрану. Команда блокується поки заборона "
 "активна."
 
-#: ../src/mate-screensaver-command.c:95
+#: ../src/mate-screensaver-command.c:100
 msgid "The calling application that is inhibiting the screensaver"
 msgstr "Виклик проґрами, яка затримує зберігач екрану"
 
-#: ../src/mate-screensaver-command.c:99
+#: ../src/mate-screensaver-command.c:104
 msgid "The reason for inhibiting the screensaver"
 msgstr "Причина для затримки зберігача екрану"
 
-#: ../src/mate-screensaver-command.c:103 ../src/mate-screensaver-dialog.c:58
+#: ../src/mate-screensaver-command.c:108 ../src/mate-screensaver-dialog.c:58
 #: ../src/mate-screensaver.c:55
 msgid "Version of this application"
 msgstr "Версія цієї програми"
 
-#: ../src/mate-screensaver-command.c:352
+#: ../src/mate-screensaver-command.c:357
 #, c-format
 msgid "The screensaver is %s\n"
 msgstr "Зберігач екрану: %s\n"
 
-#: ../src/mate-screensaver-command.c:352
+#: ../src/mate-screensaver-command.c:357
 msgid "active"
 msgstr "активне"
 
-#: ../src/mate-screensaver-command.c:352
+#: ../src/mate-screensaver-command.c:357
 msgid "inactive"
 msgstr "неактивне"
 
-#: ../src/mate-screensaver-command.c:368
+#: ../src/mate-screensaver-command.c:373
 #, c-format
 msgid "The screensaver is not inhibited\n"
 msgstr "Зберігач екрану не стримується\n"
 
-#: ../src/mate-screensaver-command.c:376
+#: ../src/mate-screensaver-command.c:381
 #, c-format
 msgid "The screensaver is being inhibited by:\n"
 msgstr "Зберігач екрану стримується:\n"
 
-#: ../src/mate-screensaver-command.c:411
+#: ../src/mate-screensaver-command.c:416
 #, c-format
 msgid "The screensaver has been active for %d seconds.\n"
 msgstr "Зберігач екрану був активний впродовж %d секунд.\n"
 
-#: ../src/mate-screensaver-command.c:417
+#: ../src/mate-screensaver-command.c:422
 #, c-format
 msgid "The screensaver is not currently active.\n"
 msgstr "Зберігач екрану наразі не активований\n"
@@ -741,15 +745,15 @@ msgstr "Отримання доступу назараз заборонено."
 msgid "No longer permitted to access the system."
 msgstr "Більше немає дозволу на доступ до системи."
 
-#: ../src/gs-listener-dbus.c:2180
+#: ../src/gs-listener-dbus.c:2187
 msgid "failed to register with the message bus"
 msgstr "не вдається зареєструватися на шині повідомлень"
 
-#: ../src/gs-listener-dbus.c:2191
+#: ../src/gs-listener-dbus.c:2198
 msgid "not connected to the message bus"
 msgstr "не під’єднаний до шини повідомлень"
 
-#: ../src/gs-listener-dbus.c:2201 ../src/gs-listener-dbus.c:2233
+#: ../src/gs-listener-dbus.c:2208 ../src/gs-listener-dbus.c:2240
 msgid "screensaver already running in this session"
 msgstr "у цьому сеансі вже запущено зберігач екрану"
 
@@ -767,19 +771,19 @@ msgstr "Час сплив."
 msgid "You have the Caps Lock key on."
 msgstr "Натиснута клавіша Caps Lock."
 
-#: ../src/gs-lock-plug.c:1652
+#: ../src/gs-lock-plug.c:1660
 msgid "S_witch User..."
 msgstr "_Змінити користувача..."
 
-#: ../src/gs-lock-plug.c:1661
+#: ../src/gs-lock-plug.c:1669
 msgid "Log _Out"
 msgstr "_Завершити сеанс"
 
 #. To translators: This expands to USERNAME on HOSTNAME
-#: ../src/gs-lock-plug.c:1874
+#: ../src/gs-lock-plug.c:1882
 msgid "%U on %h"
 msgstr "%U на %h"
 
-#: ../src/gs-lock-plug.c:1889
+#: ../src/gs-lock-plug.c:1897
 msgid "_Password:"
 msgstr "_Пароль:"
