@@ -2,7 +2,7 @@ dnl -*- mode: m4 -*-
 
 AC_PREREQ(2.60)
 AC_INIT([mate-screensaver],
-        [1.22.1],
+        [1.22.2],
         [http://www.mate-desktop.org/])
 
 AC_CONFIG_SRCDIR(src/mate-screensaver.c)
@@ -411,23 +411,6 @@ if test "$with_xf86gamma" = yes; then
 elif test "$with_xf86gamma" != no; then
   echo "error: must be yes or no: --with-xf86gamma-ext=$with_xf86vmode"
   exit 1
-fi
-
-dnl ---------------------------------------------------------------------------
-dnl - Check for XF86MiscSetGrabKeysState (but only bother if we are already
-dnl - using other XF86 stuff.)
-dnl ---------------------------------------------------------------------------
-
-
-have_xf86miscsetgrabkeysstate=no
-if test "$have_xf86gamma" = yes -o "$have_xf86vmode" = yes; then
-  AC_CHECK_X_LIB(Xxf86misc, XF86MiscSetGrabKeysState,
-                [have_xf86miscsetgrabkeysstate=yes],
-                [true], -lXext -lX11)
-  if test "$have_xf86miscsetgrabkeysstate" = yes ; then
-    SAVER_LIBS="$SAVER_LIBS -lXxf86misc"
-    AC_DEFINE(HAVE_XF86MISCSETGRABKEYSSTATE, , [Define this if you have the XF86MiscSetGrabKeysState function])
-  fi
 fi
 
 dnl ---------------------------------------------------------------------------
