@@ -77,8 +77,6 @@ enum
 
 static void gs_lock_plug_finalize   (GObject         *object);
 
-#define GS_LOCK_PLUG_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GS_TYPE_LOCK_PLUG, GSLockPlugPrivate))
-
 struct GSLockPlugPrivate
 {
 	GtkWidget   *vbox;
@@ -153,7 +151,7 @@ enum
 
 static guint lock_plug_signals [LAST_SIGNAL] = { 0 };
 
-G_DEFINE_TYPE (GSLockPlug, gs_lock_plug, GTK_TYPE_PLUG)
+G_DEFINE_TYPE_WITH_PRIVATE (GSLockPlug, gs_lock_plug, GTK_TYPE_PLUG)
 
 static void
 gs_lock_plug_style_set (GtkWidget *widget,
@@ -240,7 +238,7 @@ do_user_switch (GSLockPlug *plug)
 												&error);
 
 		g_free (command);
-		
+
 		if (! res) {
 			gs_debug ("Unable to start GDM greeter: %s", error->message);
 			g_error_free (error);
@@ -1283,8 +1281,6 @@ gs_lock_plug_class_init (GSLockPlugClass *klass)
 
 	klass->close = gs_lock_plug_close;
 
-	g_type_class_add_private (klass, sizeof (GSLockPlugPrivate));
-
 	lock_plug_signals [RESPONSE] = g_signal_new ("response",
 	                               G_OBJECT_CLASS_TYPE (klass),
 	                               G_SIGNAL_RUN_LAST,
@@ -2003,12 +1999,21 @@ load_theme (GSLockPlug *plug)
 
 	filename = g_strdup_printf ("lock-dialog-%s.css", theme);
 	g_free (theme);
-
 	css = g_build_filename (GTKBUILDERDIR, filename, NULL);
 	g_free (filename);
 	if (g_file_test (css, G_FILE_TEST_IS_REGULAR))
 	{
-		GtkCssProvider *style_provider = gtk_css_provider_get_default ();
+		static GtkCssProvider *style_provider = NULL;
+
+		if (style_provider == NULL)
+		{
+			style_provider = gtk_css_provider_new ();
+
+			gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
+			                                           GTK_STYLE_PROVIDER (style_provider),
+			                                           GTK_STYLE_PROVIDER_PRIORITY_USER);
+		}
+
 		gtk_css_provider_load_from_path (style_provider, css, NULL);
 	}
 	g_free (css);
@@ -2099,7 +2104,7 @@ gs_lock_plug_init (GSLockPlug *plug)
 {
 	gs_profile_start (NULL);
 
-	plug->priv = GS_LOCK_PLUG_GET_PRIVATE (plug);
+	plug->priv = gs_lock_plug_get_instance_private (plug);
 
 	clear_clipboards (plug);
 

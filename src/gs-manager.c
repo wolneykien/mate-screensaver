@@ -41,11 +41,7 @@
 #include "gs-fade.h"
 #include "gs-debug.h"
 
-static void gs_manager_class_init (GSManagerClass *klass);
-static void gs_manager_init       (GSManager      *manager);
 static void gs_manager_finalize   (GObject        *object);
-
-#define GS_MANAGER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GS_TYPE_MANAGER, GSManagerPrivate))
 
 struct GSManagerPrivate
 {
@@ -120,7 +116,7 @@ enum
 
 static guint         signals [LAST_SIGNAL] = { 0, };
 
-G_DEFINE_TYPE (GSManager, gs_manager, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (GSManager, gs_manager, G_TYPE_OBJECT)
 
 static void
 manager_add_job_for_window (GSManager *manager,
@@ -1027,8 +1023,6 @@ gs_manager_class_init (GSManagerClass *klass)
 	                                         NULL,
 	                                         TRUE,
 	                                         G_PARAM_READWRITE));
-
-	g_type_class_add_private (klass, sizeof (GSManagerPrivate));
 }
 
 static void
@@ -1041,7 +1035,7 @@ on_bg_changed (MateBG   *bg,
 static void
 gs_manager_init (GSManager *manager)
 {
-	manager->priv = GS_MANAGER_GET_PRIVATE (manager);
+	manager->priv = gs_manager_get_instance_private (manager);
 
 	manager->priv->fade = gs_fade_new ();
 	manager->priv->grab = gs_grab_new ();

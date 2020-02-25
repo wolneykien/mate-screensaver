@@ -2,8 +2,8 @@ dnl -*- mode: m4 -*-
 
 AC_PREREQ(2.60)
 AC_INIT([mate-screensaver],
-        [1.22.2],
-        [http://www.mate-desktop.org/])
+        [1.24.0],
+        [https://mate-desktop.org/])
 
 AC_CONFIG_SRCDIR(src/mate-screensaver.c)
 AC_CONFIG_MACRO_DIR([m4])
@@ -14,8 +14,9 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CONFIG_HEADERS(config.h)
 
 AM_MAINTAINER_MODE
+MATE_DEBUG_CHECK([no])
+MATE_COMPILE_WARNINGS([yes])
 
-IT_PROG_INTLTOOL([0.50.1])
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_STDC_HEADERS
@@ -29,11 +30,12 @@ AC_SUBST(VERSION)
 # Save flags to aclocal
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
+AM_GNU_GETTEXT_VERSION([0.19.8])
+AM_GNU_GETTEXT([external])
+
 GETTEXT_PACKAGE=mate-screensaver
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Name of default gettext domain])
-
-AM_GLIB_GNU_GETTEXT
 
 dnl
 dnl Enable gsettings schema macros
@@ -99,8 +101,21 @@ SAVER_LIBS="$ALL_X_LIBS"
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
+# GLIB_COMPILE_RESOURCES
 
-MATE_COMPILE_WARNINGS(yes)
+AC_ARG_VAR([GLIB_COMPILE_RESOURCES],[glib-compile-resources bin])
+AC_PATH_PROG([GLIB_COMPILE_RESOURCES],[glib-compile-resources],[])
+if test -z "$GLIB_COMPILE_RESOURCES"; then
+  AC_MSG_ERROR([glib-compile-resources not found])
+fi
+
+# XMLLINT
+
+AC_ARG_VAR([XMLLINT],[xmllint bin])
+AC_PATH_PROG([XMLLINT],[xmllint],[])
+if test -z "$XMLLINT"; then
+  AC_MSG_ERROR([xmllint not found])
+fi
 
 # Solaris requires libresolv for daemon()
 case "$host" in
@@ -193,7 +208,7 @@ dnl ---------------------------------------------------------------------------
 #
 AC_DEFUN([AC_CHECK_X_HEADER], [
   ac_save_CPPFLAGS="$CPPFLAGS"
-  if test \! -z "$includedir" ; then 
+  if test \! -z "$includedir" ; then
     CPPFLAGS="$CPPFLAGS -I$includedir"
   fi
   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
@@ -204,7 +219,7 @@ AC_DEFUN([AC_CHECK_X_HEADER], [
 #
 AC_DEFUN([AC_TRY_X_COMPILE], [
   ac_save_CPPFLAGS="$CPPFLAGS"
-  if test \! -z "$includedir" ; then 
+  if test \! -z "$includedir" ; then
     CPPFLAGS="$CPPFLAGS -I$includedir"
   fi
   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
@@ -220,7 +235,7 @@ AC_DEFUN([AC_CHECK_X_LIB], [
   ac_save_LDFLAGS="$LDFLAGS"
 #  ac_save_LIBS="$LIBS"
 
-  if test \! -z "$includedir" ; then 
+  if test \! -z "$includedir" ; then
     CPPFLAGS="$CPPFLAGS -I$includedir"
   fi
   # note: $X_CFLAGS includes $x_includes
@@ -335,7 +350,7 @@ if test "$with_mit" = yes; then
 
     if test "$have_mit" = no; then
       # Looks like some versions of XFree86 (whichever version
-      # it is that comes with RedHat Linux 2.0 -- I can't find a version 
+      # it is that comes with RedHat Linux 2.0 -- I can't find a version
       # number) put this in Xss instead of Xext.
       AC_CHECK_X_LIB(Xss, XScreenSaverRegister,
                      [have_mit=yes; SAVER_LIBS="$SAVER_LIBS -lXss"],
@@ -1038,55 +1053,13 @@ AC_SUBST(EXPANDED_DATADIR)
 prefix=$old_prefix
 exec_prefix=$old_exec_prefix
 
-# Turn on the additional warnings last, so -Werror doesn't affect other tests.
-
-AC_ARG_ENABLE(more-warnings,
-  AC_HELP_STRING([--enable-more-warnings], [Maximum compiler warnings]),
-set_more_warnings="$enableval",[
-if test -d $srcdir/.git; then
-        is_cvs_version=true
-        set_more_warnings=yes
-else
-        set_more_warnings=no
-fi
-])
-AC_MSG_CHECKING(for more warnings)
-if test "$GCC" = "yes" -a "$set_more_warnings" != "no"; then
-        AC_MSG_RESULT(yes)
-        CFLAGS="\
-        -Wall \
-        -Wchar-subscripts -Wmissing-declarations -Wmissing-prototypes \
-        -Wnested-externs -Wpointer-arith \
-        -Wcast-align -Wsign-compare \
-        $CFLAGS"
-
-        for option in -Wno-strict-aliasing -Wno-sign-compare; do
-                SAVE_CFLAGS="$CFLAGS"
-                CFLAGS="$CFLAGS $option"
-                AC_MSG_CHECKING([whether gcc understands $option])
-                AC_TRY_COMPILE([], [],
-                        has_option=yes,
-                        has_option=no,)
-                if test $has_option = no; then
-                        CFLAGS="$SAVE_CFLAGS"
-                fi
-                AC_MSG_RESULT($has_option)
-                unset has_option
-                unset SAVE_CFLAGS
-        done
-        unset option
-else
-        AC_MSG_RESULT(no)
-fi
-
 #
-# Enable Debug
+# Enable Debug Log
 #
-AC_ARG_ENABLE(debug, [AC_HELP_STRING([--enable-debug=[no/yes]], [turn on debugging])],, enable_debug=yes)
-if test "$enable_debug" = "yes"; then
+if test "$ax_enable_debug" = "yes"; then
   DEBUG_CFLAGS="-DG_ENABLE_DEBUG"
 else
-  if test "x$enable_debug" = "xno"; then
+  if test "x$ax_enable_debug" = "xno"; then
     DEBUG_CFLAGS="-DG_DISABLE_ASSERT -DG_DISABLE_CHECKS"
   else
     DEBUG_CFLAGS=""
@@ -1163,6 +1136,7 @@ echo "
         source code location:     ${srcdir}
         compiler:                 ${CC}
         cflags:                   ${CFLAGS}
+        Warning flags:            ${WARN_CFLAGS}
         Base libs:                ${MATE_SCREENSAVER_LIBS}
         Extension libs:           ${SAVER_LIBS}
         Maintainer mode:          ${USE_MAINTAINER_MODE}

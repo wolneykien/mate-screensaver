@@ -56,7 +56,8 @@ noinst_PROGRAMS = 	\
 desktopdir = $(sysconfdir)/xdg/autostart
 desktop_in_files = mate-screensaver.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
-@INTLTOOL_DESKTOP_RULE@
+$(desktop_DATA): $(desktop_in_files)
+	$(AM_V_GEN) $(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
 
 mate_screensaver_command_SOURCES = 	\
 	mate-screensaver-command.c	\
@@ -232,6 +233,13 @@ mate_screensaver_LDADD =		\
 
 mate_screensaver_LDFLAGS = -export-dynamic
 
+mate-screensaver-preferences-resources.h mate-screensaver-preferences-resources.c: $(srcdir)/../data/org.mate.screensaver.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(srcdir)/../data $(srcdir)/../data/org.mate.screensaver.gresource.xml)
+	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(srcdir)/../data --generate --c-name screensaver $<
+
+nodist_mate_screensaver_preferences_SOURCES = \
+	mate-screensaver-preferences-resources.h \
+	mate-screensaver-preferences-resources.c \
+	$(NULL)
 mate_screensaver_preferences_SOURCES =	\
 	mate-screensaver-preferences.c	\
 	copy-theme-dialog.c		\
@@ -259,6 +267,8 @@ EXTRA_DIST =				\
 CLEANFILES = 				\
 	$(desktop_DATA) 		\
 	mate-screensaver.desktop.in	\
+	mate-screensaver-preferences-resources.h \
+	mate-screensaver-preferences-resources.c \
 	$(BUILT_SOURCES)
 
 MAINTAINERCLEANFILES =			\

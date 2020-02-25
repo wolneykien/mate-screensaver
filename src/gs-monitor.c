@@ -43,12 +43,7 @@
 #include "gs-prefs.h"
 #include "gs-debug.h"
 
-static void gs_monitor_class_init(GSMonitorClass* klass);
-static void gs_monitor_init(GSMonitor* monitor);
 static void gs_monitor_finalize(GObject* object);
-
-#define GS_MONITOR_GET_PRIVATE(o) \
-	(G_TYPE_INSTANCE_GET_PRIVATE((o), GS_TYPE_MONITOR, GSMonitorPrivate))
 
 struct GSMonitorPrivate {
 	GSWatcher* watcher;
@@ -62,15 +57,13 @@ struct GSMonitorPrivate {
 
 #define FADE_TIMEOUT 10000
 
-G_DEFINE_TYPE(GSMonitor, gs_monitor, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (GSMonitor, gs_monitor, G_TYPE_OBJECT)
 
 static void gs_monitor_class_init(GSMonitorClass* klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS(klass);
 
 	object_class->finalize = gs_monitor_finalize;
-
-	g_type_class_add_private(klass, sizeof(GSMonitorPrivate));
 }
 
 static void manager_activated_cb(GSManager* manager, GSMonitor* monitor)
@@ -421,7 +414,7 @@ static void connect_prefs_signals(GSMonitor* monitor)
 static void gs_monitor_init(GSMonitor* monitor)
 {
 
-	monitor->priv = GS_MONITOR_GET_PRIVATE(monitor);
+	monitor->priv = gs_monitor_get_instance_private (monitor);
 
 	monitor->priv->prefs = gs_prefs_new();
 	connect_prefs_signals(monitor);

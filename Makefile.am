@@ -9,15 +9,10 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	--without-systemd \
 	CFLAGS='-Wno-deprecated-declarations'
 
-SUBDIRS =
-if HAVE_PASSWD_HELPER
-SUBDIRS += helper
-endif
-
-SUBDIRS +=	\
+SUBDIRS =			\
+	po 			\
 	src			\
 	savers			\
-	po 			\
 	data			\
 	doc			\
 	$(NULL)
@@ -30,22 +25,15 @@ EXTRA_DIST =			\
 	INSTALL			\
 	README			\
 	ChangeLog		\
+	its			\
 	NEWS			\
-	intltool-extract.in     \
-	intltool-merge.in       \
-	intltool-update.in	\
 	$(NULL)
 
 DISTCLEANFILES =		\
-	intltool-extract	\
-	intltool-merge		\
-	intltool-update		\
-	./po/.intltool-merge-cache	\
 	$(NULL)
 
 MAINTAINERCLEANFILES =		\
 	*~			\
-	intltool-*.in		\
 	compile			\
 	configure		\
 	INSTALL			\

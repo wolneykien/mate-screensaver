@@ -9,19 +9,21 @@ man_MANS = 				\
 	mate-screensaver-preferences.1	\
 	$(NULL)
 
-@INTLTOOL_DESKTOP_RULE@
-
 desktopdir = $(datadir)/applications
 desktop_in_files = mate-screensaver-preferences.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
-@INTLTOOL_DIRECTORY_RULE@
+$(desktop_DATA): $(desktop_in_files)
+	$(AM_V_GEN) $(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
 
 directorydir = $(datadir)/desktop-directories
 directory_in_files =                            \
-	mate-screensaver.directory.in		\
+	mate-screensaver.directory.desktop.in		\
 	$(NULL)
-directory_DATA = $(directory_in_files:.directory.in=.directory)
+directory_DATA = $(directory_in_files:.directory.desktop.in=.directory)
+
+$(directory_DATA): $(directory_in_files)
+	$(AM_V_GEN) $(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
 
 menudir = $(sysconfdir)/xdg/menus
 menu_DATA =					\
@@ -30,7 +32,6 @@ menu_DATA =					\
 
 gtkbuilderdir = $(pkgdatadir)
 gtkbuilder_DATA = 					\
-	mate-screensaver-preferences.ui	\
 	lock-dialog-default.ui		\
 	$(NULL)
 
@@ -41,7 +42,6 @@ dbussessionservicedir = $(DBUS_SESSION_SERVICE_DIR)
 dbussessionservice_DATA = org.mate.ScreenSaver.service
 
 @GSETTINGS_RULES@
-@INTLTOOL_XML_NOMERGE_RULE@
 
 gsettingsschema_in_files = org.mate.screensaver.gschema.xml.in
 gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
@@ -54,7 +54,9 @@ EXTRA_DIST = 				\
 	$(man_MANS)			\
 	mate-screensaver		\
 	mate-screensaver.pc.in		\
-	org.mate.ScreenSaver.service.in\
+	mate-screensaver-preferences.ui \
+	org.mate.screensaver.gresource.xml \
+	org.mate.ScreenSaver.service.in \
 	xscreensaver-config.xsl		\
 	migrate-xscreensaver-config.sh	\
 	$(NULL)

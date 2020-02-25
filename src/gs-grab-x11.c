@@ -33,13 +33,7 @@
 #include "gs-grab.h"
 #include "gs-debug.h"
 
-static void     gs_grab_class_init (GSGrabClass *klass);
-static void     gs_grab_init       (GSGrab      *grab);
 static void     gs_grab_finalize   (GObject     *object);
-
-#define GS_GRAB_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GS_TYPE_GRAB, GSGrabPrivate))
-
-G_DEFINE_TYPE (GSGrab, gs_grab, G_TYPE_OBJECT)
 
 static gpointer grab_object = NULL;
 
@@ -52,6 +46,8 @@ struct GSGrabPrivate
 
 	GtkWidget *invisible;
 };
+
+G_DEFINE_TYPE_WITH_PRIVATE (GSGrab, gs_grab, G_TYPE_OBJECT)
 
 static const char *
 grab_string (int status)
@@ -406,14 +402,12 @@ gs_grab_class_init (GSGrabClass *klass)
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->finalize = gs_grab_finalize;
-
-	g_type_class_add_private (klass, sizeof (GSGrabPrivate));
 }
 
 static void
 gs_grab_init (GSGrab *grab)
 {
-	grab->priv = GS_GRAB_GET_PRIVATE (grab);
+	grab->priv = gs_grab_get_instance_private (grab);
 
 	grab->priv->no_pointer_grab = FALSE;
 	grab->priv->hide_cursor = FALSE;
