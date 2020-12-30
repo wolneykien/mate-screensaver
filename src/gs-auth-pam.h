@@ -26,7 +26,7 @@
 
 G_BEGIN_DECLS
 
-inline GSAuthMessageStyle
+static inline GSAuthMessageStyle
 pam_style_to_gs_style (int pam_style)
 {
 	GSAuthMessageStyle style;
