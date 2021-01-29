@@ -89,7 +89,7 @@ setup_signals(void)
 
 static int
 _converse(int num_msg, const struct pam_message **msg,
-		struct pam_response **resp, void *appdata_ptr)
+          struct pam_response **resp, void *appdata_ptr)
 {
 	struct	pam_response *reply;
 	char buf[MAXLEN];
@@ -103,8 +103,8 @@ _converse(int num_msg, const struct pam_message **msg,
 		ssize_t wt, rd;
 		size_t msg_len = strlen(msg[num]->msg);
 		wt = write_prompt (STDOUT_FILENO,
-						   pam_style_to_gs_style (msg[num]->msg_style),
-						   msg[num]->msg, msg_len);
+				   pam_style_to_gs_style (msg[num]->msg_style),
+				   msg[num]->msg, msg_len);
 		if (wt < 0 || wt != msg_len) {
 			_log_err(LOG_ERR, "error writing promt");
 			ret = PAM_CONV_ERR;
