@@ -37,7 +37,7 @@ enum {
 	UNIX_FAILED = 1
 };
 
-static char *	program_name;
+static char * program_name;
 
 /*
  * Log error messages
@@ -91,9 +91,9 @@ static int
 _converse(int num_msg, const struct pam_message **msg,
           struct pam_response **resp, void *appdata_ptr)
 {
-	struct	pam_response *reply;
+	struct pam_response *reply;
 	char buf[MAXLEN];
-	int	num;
+	int num;
 	int ret = PAM_SUCCESS;
 
 	if (!(reply = malloc(sizeof(*reply) * num_msg)))
@@ -141,8 +141,8 @@ static int
 _authenticate(const char *service, const char *user)
 {
 	struct pam_conv conv = { _converse, NULL };
-	pam_handle_t	*pamh;
-	int		err;
+	pam_handle_t *pamh;
+	int err;
 
 	err = pam_start(service, user, &conv, &pamh);
 	if (err != PAM_SUCCESS) {
@@ -198,7 +198,7 @@ static int
 sane_pam_service(const char *name)
 {
 	const char *sp;
-	char	path[128];
+	char path[128];
 
 	if (strlen(name) > 32)
 		return 0;
@@ -215,9 +215,9 @@ int
 main(int argc, char *argv[])
 {
 	const char *program_name;
-	char	*service, *user;
-	int	fd;
-	uid_t	uid;
+	char *service, *user;
+	int fd;
+	uid_t uid;
 
 	uid = getuid();
 
@@ -270,7 +270,7 @@ main(int argc, char *argv[])
 		fprintf(stderr,
 			"This binary is not designed for running in this way\n"
 			"-- the system administrator has been informed\n");
-		sleep(10);	/* this should discourage/annoy the user */
+		sleep(10); /* this should discourage/annoy the user */
 		return UNIX_FAILED;
 	}
 
