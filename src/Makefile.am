@@ -69,6 +69,7 @@ mate_screensaver_command_LDADD =	\
 
 AUTH_SOURCES = 			\
 	gs-auth.h		\
+	gs-auth-pam.h		\
 	gs-auth-@AUTH_SCHEME@.c	\
 	$(NULL)
 
