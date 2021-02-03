@@ -28,7 +28,7 @@
 #include <ctype.h>
 
 #include "helper_proto.h"
-#include "../src/gs-auth-pam.h"
+#include "gs-auth-pam.h"
 
 #define MAXLEN 1024
 
