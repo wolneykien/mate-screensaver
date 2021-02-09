@@ -1,15 +1,16 @@
 /*
  * Set*id helper program for PAM authentication.
  *
- * It is supposed to be called from pam_unix2's
- * pam_sm_authenticate function if the function notices
- * that it's unable to get the password from the shadow file
- * because it doesn't have sufficient permissions.
+ * It is supposed to be called from mate-screensaver
+ * in order to communicate with Linux PAM as a privileged proxy.
+ * The conversation messages from the PAM stack is transmitted to
+ * mate-screensaver dialog via stdout and the received user replies
+ * read from stdin are sent back to PAM.
  *
- * Copyright (C) 2002 SuSE Linux AG
+ * Copyright (c) 2021 Paul Wolneykien <manowar@altlinux.org>.
  *
- * Written by okir@suse.de, loosely based on unix_chkpwd
- * by Andrew Morgan.
+ * Based on the helper written by okir@suse.de, loosely based on
+ * unix_chkpwd by Andrew Morgan.
  */
 
 #include <security/pam_appl.h>
