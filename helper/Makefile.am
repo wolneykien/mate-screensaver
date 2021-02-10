@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = 1.7
 noinst_LIBRARIES = libhelper-proto.a
 
 libhelper_proto_a_CFLAGS =	\
-	$(MATE_SCREENSAVER_CFLAGS) \
+	$(PAM_HELPER_CFLAGS) \
 	-I$(top_srcdir)/src
 
 libhelper_proto_a_SOURCES =	\
@@ -15,7 +15,7 @@ pkglibexecdir = $(libexecdir)/mate-screensaver
 pkglibexec_PROGRAMS = mate-screensaver-pam-helper
 
 mate_screensaver_pam_helper_CFLAGS =	\
-	$(MATE_SCREENSAVER_CFLAGS)	\
+	$(PAM_HELPER_CFLAGS) \
 	-I$(top_srcdir)/src
 
 mate_screensaver_pam_helper_SOURCES =	\
