@@ -103,8 +103,10 @@ ext_run (const char *user,
 
 	if ((pid = fork ()) < 0)
 	{
-		close (pfd [0]); close (pfd [1]);
-		close (r_pfd [0]); close (r_pfd [1]);
+		close (pfd [0]);
+                close (pfd [1]);
+		close (r_pfd [0]);
+                close (r_pfd [1]);
 		return FALSE;
 	}
 
