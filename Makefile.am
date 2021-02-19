@@ -11,7 +11,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	CFLAGS='-Wno-deprecated-declarations'
 
 SUBDIRS =
-if HAVE_PASSWD_HELPER
+if BUILTIN_HELPER
 SUBDIRS += helper
 endif
 

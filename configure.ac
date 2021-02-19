@@ -816,6 +816,7 @@ fi
 #       all in xscreensaver itself; the external program just does auth.)
 
 have_passwd_helper=no
+builtin_helper=no
 with_passwd_helper_req=unspecified
 
 AC_ARG_WITH(passwd-helper,
@@ -827,19 +828,19 @@ AC_ARG_WITH(passwd-helper,
 if test "$enable_locking" = no ; then
   with_passwd_helper_req=no
   with_passwd_helper=no
+  builtin_helper=no
 fi
 
 case "$with_passwd_helper" in
   ""|no) : ;;
   /*)
     AC_DEFINE_UNQUOTED(PASSWD_HELPER_PROGRAM, "$with_passwd_helper", [Full pathname of password helper application])
+    builtin_helper=no
     have_passwd_helper=yes;;
   *)
     echo "error: --with-passwd-helper needs full pathname of helper (not '$with_passwd_helper')." >&2
     exit 1
 esac
-AM_CONDITIONAL(HAVE_PASSWD_HELPER, test x$have_passwd_helper = xyes)
-AC_SUBST(HAVE_PASSWD_HELPER)
 
 if test "$need_setuid" = yes -a "$have_pam" != yes ; then
   NEED_SETUID=yes
@@ -863,7 +864,9 @@ if test x$enable_authentication_scheme = xpam -a x$have_pam = xno ; then
 	AC_MSG_ERROR(PAM support requested but not available)
 fi
 if test x$enable_authentication_scheme = xhelper -a x$have_passwd_helper = xno ; then
-	AC_MSG_ERROR(Password helper support requested but not available)
+	builtin_helper=yes
+    have_passwd_helper=yes
+    AC_DEFINE_UNQUOTED(PASSWD_HELPER_PROGRAM, "${libexecdir}/mate-screensaver/mate-screensaver-pam-helper", [Full pathname of password helper application])
 fi
 if test x$enable_authentication_scheme = xbsdauth -a x$have_bsdauth = xno ; then
 	AC_MSG_ERROR(bsd_auth(3) support requested but not available)
@@ -892,6 +895,9 @@ else
 fi
 
 AC_SUBST(AUTH_SCHEME)
+AM_CONDITIONAL(HAVE_PASSWD_HELPER, test x$have_passwd_helper = xyes)
+AM_CONDITIONAL(BUILTIN_HELPER, test x$builtin_helper = xyes)
+AC_SUBST(HAVE_PASSWD_HELPER)
 
 dnl ---------------------------------------------------------------------------
 dnl ConsoleKit
