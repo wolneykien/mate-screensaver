@@ -27,133 +27,133 @@
 static ssize_t
 read_all (int fd, void *buf, size_t count)
 {
-	ssize_t rd, t_rd = 0;
+    ssize_t rd, t_rd = 0;
 
-	if (0 == count)
-		return 0;
+    if (0 == count)
+        return 0;
 
-	while (t_rd < count)
-	{
-		rd = read (fd, buf + t_rd, count - t_rd);
-		if (0 == rd)
-			break;
-		if (rd < 0)
-			return rd;
-		t_rd += rd;
-	}
+    while (t_rd < count)
+    {
+        rd = read (fd, buf + t_rd, count - t_rd);
+        if (0 == rd)
+            break;
+        if (rd < 0)
+            return rd;
+        t_rd += rd;
+    }
 
-	return t_rd;
+    return t_rd;
 }
 
 ssize_t
 read_msg (int fd, char *buf, size_t length)
 {
-	size_t msg_len;
-	ssize_t rd;
+    size_t msg_len;
+    ssize_t rd;
 
-	rd = read_all (fd, &msg_len, sizeof msg_len);
-	if (rd < 0)
-		return HELPER_IO_ERR;
-	if (rd > 0 && rd != sizeof msg_len)
-		return HELPER_LENGTH_READ_ERR;
-	
-	if (msg_len >= length)
-		return HELPER_TOO_LONG_ERR;
+    rd = read_all (fd, &msg_len, sizeof msg_len);
+    if (rd < 0)
+        return HELPER_IO_ERR;
+    if (rd > 0 && rd != sizeof msg_len)
+        return HELPER_LENGTH_READ_ERR;
 
-	if (msg_len > 0)
-	{
-		rd = read_all (fd, buf, msg_len);
-		if (rd < 0)
-			return HELPER_IO_ERR;
-		if (rd != msg_len)
-			return HELPER_MSG_READ_ERR;
-	}
-	else
-		rd = 0;
-	buf[rd] = '\0';
+    if (msg_len >= length)
+        return HELPER_TOO_LONG_ERR;
 
-	return rd;
+    if (msg_len > 0)
+    {
+        rd = read_all (fd, buf, msg_len);
+        if (rd < 0)
+            return HELPER_IO_ERR;
+        if (rd != msg_len)
+            return HELPER_MSG_READ_ERR;
+    }
+    else
+        rd = 0;
+    buf[rd] = '\0';
+
+    return rd;
 }
 
 int
 read_prompt (int fd, char *buf, size_t *length)
 {
-	int msg_type, rd;
+    int msg_type, rd;
 
-	rd = read_all (fd, &msg_type, sizeof msg_type);
-	if (0 == rd)
-		return 0;
-	if (rd < 0)
-		return HELPER_IO_ERR;
-	if (rd > 0 && rd != sizeof msg_type)
-		return HELPER_TYPE_READ_ERR;
+    rd = read_all (fd, &msg_type, sizeof msg_type);
+    if (0 == rd)
+        return 0;
+    if (rd < 0)
+        return HELPER_IO_ERR;
+    if (rd > 0 && rd != sizeof msg_type)
+        return HELPER_TYPE_READ_ERR;
 
-	rd = read_msg (fd, buf, *length);
-	if (rd < 0)
-		return rd;
+    rd = read_msg (fd, buf, *length);
+    if (rd < 0)
+        return rd;
 
-	*length = rd;
-	return msg_type;
+    *length = rd;
+    return msg_type;
 }
 
 static ssize_t
 write_all (int fd, const void *buf, size_t count)
 {
-	ssize_t wt, t_wt = 0;
+    ssize_t wt, t_wt = 0;
 
-	if (0 == count)
-		return 0;
+    if (0 == count)
+        return 0;
 
-	while (t_wt < count)
-	{
-		wt = write (fd, buf + t_wt, count - t_wt);
-		if (0 == wt)
-			break;
-		if (wt < 0)
-			return wt;
-		t_wt += wt;
-	}
+    while (t_wt < count)
+    {
+        wt = write (fd, buf + t_wt, count - t_wt);
+        if (0 == wt)
+            break;
+        if (wt < 0)
+            return wt;
+        t_wt += wt;
+    }
 
-	return t_wt;
+    return t_wt;
 }
 
 ssize_t
 write_msg (int fd, const void *buf, size_t length)
 {
-	ssize_t wt;
-		
-	wt = write_all (fd, &length, sizeof length);
-	if (wt < 0)
-		return HELPER_IO_ERR;
-	if (wt > 0 && wt != sizeof length)
-		return HELPER_LENGTH_WRITE_ERR;
+    ssize_t wt;
 
-	if (length > 0)
-	{
-		wt = write_all (fd, buf, length);
-		if (wt < 0)
-			return HELPER_IO_ERR;
-		if (wt != length)
-			return HELPER_MSG_WRITE_ERR;
-	}
-	else
-		wt = 0;
+    wt = write_all (fd, &length, sizeof length);
+    if (wt < 0)
+        return HELPER_IO_ERR;
+    if (wt > 0 && wt != sizeof length)
+        return HELPER_LENGTH_WRITE_ERR;
 
-	return wt;
+    if (length > 0)
+    {
+        wt = write_all (fd, buf, length);
+        if (wt < 0)
+            return HELPER_IO_ERR;
+        if (wt != length)
+            return HELPER_MSG_WRITE_ERR;
+    }
+    else
+        wt = 0;
+
+    return wt;
 }
 
 int
 write_prompt (int fd, int msg_type, const void *buf, size_t length)
 {
-	ssize_t wt;
+    ssize_t wt;
 
-	wt = write_all (fd, &msg_type, sizeof msg_type);
-	if (wt < 0)
-		return HELPER_IO_ERR;
-	if (wt > 0 && wt != sizeof msg_type)
-		return HELPER_TYPE_WRITE_ERR;
+    wt = write_all (fd, &msg_type, sizeof msg_type);
+    if (wt < 0)
+        return HELPER_IO_ERR;
+    if (wt > 0 && wt != sizeof msg_type)
+        return HELPER_TYPE_WRITE_ERR;
 
-	wt = write_msg (fd, buf, length);
+    wt = write_msg (fd, buf, length);
 
-	return wt;
+    return wt;
 }

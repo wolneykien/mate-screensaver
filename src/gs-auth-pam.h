@@ -29,24 +29,24 @@ G_BEGIN_DECLS
 static inline GSAuthMessageStyle
 pam_style_to_gs_style (int pam_style)
 {
-	GSAuthMessageStyle style;
+        GSAuthMessageStyle style;
 
-	switch (pam_style)
-	{
-	case PAM_PROMPT_ECHO_ON:
-		style = GS_AUTH_MESSAGE_PROMPT_ECHO_ON;
-		break;
-	case PAM_PROMPT_ECHO_OFF:
-		style = GS_AUTH_MESSAGE_PROMPT_ECHO_OFF;
-		break;
-	case PAM_ERROR_MSG:
-		style = GS_AUTH_MESSAGE_ERROR_MSG;
-		break;
-	default /* PAM_TEXT_INFO */:
-		style = GS_AUTH_MESSAGE_TEXT_INFO;
-	}
+        switch (pam_style)
+        {
+        case PAM_PROMPT_ECHO_ON:
+                style = GS_AUTH_MESSAGE_PROMPT_ECHO_ON;
+                break;
+        case PAM_PROMPT_ECHO_OFF:
+                style = GS_AUTH_MESSAGE_PROMPT_ECHO_OFF;
+                break;
+        case PAM_ERROR_MSG:
+                style = GS_AUTH_MESSAGE_ERROR_MSG;
+                break;
+        default /* PAM_TEXT_INFO */:
+                style = GS_AUTH_MESSAGE_TEXT_INFO;
+        }
 
-	return style;
+        return style;
 }
 
 G_END_DECLS

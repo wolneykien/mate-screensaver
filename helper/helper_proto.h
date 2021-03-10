@@ -25,19 +25,19 @@
 # include <unistd.h>
 #endif
 
-#define HELPER_IO_ERR			-1
+#define HELPER_IO_ERR           -1
 
-#define HELPER_LENGTH_READ_ERR	-2
-#define HELPER_TOO_LONG_ERR		-3
-#define HELPER_MSG_READ_ERR		-4
-#define HELPER_TYPE_READ_ERR	-5
+#define HELPER_LENGTH_READ_ERR  -2
+#define HELPER_TOO_LONG_ERR     -3
+#define HELPER_MSG_READ_ERR     -4
+#define HELPER_TYPE_READ_ERR    -5
 
 ssize_t read_msg (int fd, char *buf, size_t length);
 int read_prompt (int fd, char *buf, size_t *length);
 
-#define HELPER_LENGTH_WRITE_ERR	-6
-#define HELPER_MSG_WRITE_ERR	-7
-#define HELPER_TYPE_WRITE_ERR	-8
+#define HELPER_LENGTH_WRITE_ERR -6
+#define HELPER_MSG_WRITE_ERR    -7
+#define HELPER_TYPE_WRITE_ERR   -8
 
 ssize_t write_msg (int fd, const void *buf, size_t length);
 int write_prompt (int fd, int msg_type, const void *buf, size_t length);

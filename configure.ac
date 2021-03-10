@@ -862,7 +862,7 @@ if test x$enable_authentication_scheme = xpam -a x$have_pam = xno ; then
 	AC_MSG_ERROR(PAM support requested but not available)
 fi
 if test x$enable_authentication_scheme = xhelper -a x$have_passwd_helper = xno ; then
-	builtin_helper=yes
+    builtin_helper=yes
     have_passwd_helper=yes
     AC_DEFINE_UNQUOTED(PASSWD_HELPER_PROGRAM, "${libexecdir}/mate-screensaver/mate-screensaver-pam-helper", [Full pathname of password helper application])
 fi

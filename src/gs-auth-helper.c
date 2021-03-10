@@ -81,16 +81,16 @@ gs_auth_get_verbose (void)
 
 static gboolean
 ext_run (const char *user,
-		 GSAuthMessageFunc func,
-		 gpointer   data)
+         GSAuthMessageFunc func,
+         gpointer   data)
 {
-	int   pfd[2], r_pfd[2], status;
+        int pfd[2], r_pfd[2], status;
 	pid_t pid;
-	gboolean verbose = gs_auth_get_verbose ();
+        gboolean verbose = gs_auth_get_verbose ();
 
-	if (pipe (pfd) < 0 || pipe (r_pfd) < 0)
+        if (pipe (pfd) < 0 || pipe (r_pfd) < 0)
 	{
-		return FALSE;
+                return FALSE;
 	}
 
 	if (verbose)
@@ -103,9 +103,9 @@ ext_run (const char *user,
 
 	if ((pid = fork ()) < 0)
 	{
-		close (pfd [0]);
+                close (pfd [0]);
                 close (pfd [1]);
-		close (r_pfd [0]);
+                close (r_pfd [0]);
                 close (r_pfd [1]);
 		return FALSE;
 	}
@@ -113,15 +113,15 @@ ext_run (const char *user,
 	if (pid == 0)
 	{
 		close (pfd [1]);
-		close (r_pfd [0]);
+                close (r_pfd [0]);
 		if (pfd [0] != 0)
 		{
 			dup2 (pfd [0], 0);
 		}
-		if (r_pfd [1] != 1)
-		{
-			dup2 (r_pfd [1], 1);
-		}
+                if (r_pfd [1] != 1)
+                {
+                        dup2 (r_pfd [1], 1);
+                }
 
 		/* Helper is invoked as helper service-name [user] */
 		execlp (PASSWD_HELPER_PROGRAM, PASSWD_HELPER_PROGRAM, "mate-screensaver", user, NULL);
@@ -134,52 +134,52 @@ ext_run (const char *user,
 	}
 
 	close (pfd [0]);
-	close (r_pfd [1]);
+        close (r_pfd [1]);
 
-	gboolean ret = FALSE;
-	while (waitpid (pid, &status, WNOHANG) == 0)
-	{
-		int msg_type;
-		char buf[MAXLEN];
-		unsigned int msg_len = MAXLEN;
+        gboolean ret = FALSE;
+        while (waitpid (pid, &status, WNOHANG) == 0)
+        {
+                int msg_type;
+                char buf[MAXLEN];
+                unsigned int msg_len = MAXLEN;
 
-		msg_type = read_prompt (r_pfd [0], buf, &msg_len);
-		if (0 == msg_type) continue;
-		if (msg_type < 0)
+                msg_type = read_prompt (r_pfd [0], buf, &msg_len);
+                if (0 == msg_type) continue;
+                if (msg_type < 0)
+                {
+                        g_message ("Error reading prompt (%d)", msg_type);
+                        ret = FALSE;
+                        goto exit;
+                }
+
+                char *input = NULL;
+                func (msg_type, buf, &input, data);
+
+                unsigned int input_len = input ? strlen (input) : 0;
+                ssize_t wt;
+
+                wt = write_msg (pfd [1], input, input_len);
+                if (wt < 0)
 		{
-			g_message ("Error reading prompt (%d)", msg_type);
-			ret = FALSE;
-			goto exit;
-		}
-
-		char *input = NULL;
-		func (msg_type, buf, &input, data);
-
-		unsigned int input_len = input ? strlen (input) : 0;
-		ssize_t wt;
-		
-		wt = write_msg (pfd [1], input, input_len);
-		if (wt < 0)
-		{
-			g_message ("Error writing prompt reply (%d)", wt);
-			ret = FALSE;
-			goto exit;
+                        g_message ("Error writing prompt reply (%d)", wt);
+                        ret = FALSE;
+                        goto exit;
 		}
 	}
-		
-	close (pfd [1]);
-	close (r_pfd [0]);
+
+        close (pfd [1]);
+        close (r_pfd [0]);
 	unblock_sigchld ();
 
 	if (! WIFEXITED (status) || WEXITSTATUS (status) != 0)
 	{
-		ret = FALSE;
+                ret = FALSE;
 	}
-	else
-		ret = TRUE;
+        else
+                ret = TRUE;
 
   exit:
-	return ret;
+        return ret;
 }
 
 gboolean
@@ -189,7 +189,7 @@ gs_auth_verify_user (const char       *username,
                      gpointer          data,
                      GError          **error)
 {
-	return ext_run (username, func, data);
+        return ext_run (username, func, data);
 }
 
 gboolean
