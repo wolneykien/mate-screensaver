@@ -7,6 +7,7 @@
  * mate-screensaver dialog via stdout and the received user replies
  * read from stdin are sent back to PAM.
  *
+ * Copyright (C) 2002 SuSE Linux AG
  * Copyright (c) 2021 Paul Wolneykien <manowar@altlinux.org>.
  *
  * Based on the helper written by okir@suse.de, loosely based on
