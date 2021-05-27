@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = 1.7
 
 NULL =
 
-saverdir = $(libexecdir)/mate-screensaver
+saverdir = $(pkglibexecdir)
 themesdir = $(pkgdatadir)/themes
 
 AM_CPPFLAGS =							\
@@ -21,6 +21,7 @@ AM_CPPFLAGS =							\
 	-DDATADIR=\""$(datadir)"\"				\
 	-DSYSCONFDIR=\""$(sysconfdir)"\"			\
 	-DMATELOCALEDIR=\""$(datadir)/locale"\"			\
+	-DPKGLIBEXECDIR=\""$(pkglibexecdir)"\"			\
 	-DSAVERDIR=\""$(saverdir)"\"				\
 	-DTHEMESDIR=\""$(themesdir)"\"				\
 	-DGTKBUILDERDIR=\"$(pkgdatadir)\"			\

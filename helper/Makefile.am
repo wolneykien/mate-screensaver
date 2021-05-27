@@ -11,7 +11,6 @@ libhelper_proto_a_SOURCES =	\
 	helper_proto.h			\
 	helper_proto.c
 
-pkglibexecdir = $(libexecdir)/mate-screensaver
 pkglibexec_PROGRAMS = mate-screensaver-pam-helper
 
 mate_screensaver_pam_helper_CFLAGS =	\
